@@ -1,8 +1,8 @@
-##########
-# dp2jpa #
-##########
-
 Reverse engineering strategy based on the "remarks" property of the database tables and fields.
+
+##
+# DESCRIPTION
+##
 
 The transformation rules applied to the remarks are:
 
@@ -42,3 +42,11 @@ The following entity will be generated:
         // ...
 
     }
+
+##
+# QUICK START
+##
+
+ 1. Configure the POM properties
+ 2. Run "mvn exec:exec"
+ 3. Check your destination dir
