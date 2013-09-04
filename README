@@ -1,8 +1,10 @@
-Reverse engineering strategy based on the "remarks" property of the database tables and fields.
+Reverse Engineering from a Database to JPA Entities Based on the Remarks
 
 ##
 # DESCRIPTION
 ##
+
+Reverse engineering strategy based on the "remarks" property of the database tables and fields.
 
 The transformation rules applied to the remarks are:
 
