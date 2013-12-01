@@ -1,8 +1,6 @@
-Reverse Engineering from a Database to JPA Entities Based on the Remarks
+#Reverse Engineering from a Database to JPA Entities Based on the Remarks
 
-##
-# DESCRIPTION
-##
+## DESCRIPTION
 
 Reverse engineering strategy based on the "remarks" property of the database tables and fields.
 
@@ -45,9 +43,9 @@ The following entity will be generated:
 
     }
 
-##
-# QUICK START
-##
+
+## QUICK START
+
 
  1. Configure the POM properties
  2. Run "mvn exec:exec"
