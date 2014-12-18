@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- ! Copyright (c) 2013 db2jpa. All rights reserved.
+ ! Copyright (c) boogiedev.com, all rights reserved.
  ! This code is licensed under the LGPL 3.0 license,
  ! available at the root application directory.
--->
+ ! -->
 <!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
-    <session-factory>
-        <property name="hibernate.connection.driver_class">${jdbc.driver}</property>
-        <property name="hibernate.connection.url">${jdbc.url}</property>
-        <property name="hibernate.connection.username">${jdbc.username}</property>
-        <property name="hibernate.connection.password">${jdbc.password}</property>
-        <property name="hibernate.dialect">${jdbc.dialect}</property>
-    </session-factory>
+	<session-factory>
+		<property name="hibernate.connection.driver_class">${jdbc.driver}</property>
+		<property name="hibernate.connection.url">${jdbc.url}</property>
+		<property name="hibernate.connection.username">${jdbc.username}</property>
+		<property name="hibernate.connection.password">${jdbc.password}</property>
+		<property name="hibernate.dialect">${jdbc.dialect}</property>
+	</session-factory>
 </hibernate-configuration>

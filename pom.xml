@@ -1,167 +1,142 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- ! Copyright (c) 2013 db2jpa. All rights reserved.
+ ! Copyright (c) boogiedev.com, all rights reserved.
  ! This code is licensed under the LGPL 3.0 license,
  ! available at the root application directory.
--->
+ ! -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
-    <!-- metadata -->
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>com.boogiedev</groupId>
-    <artifactId>db2jpa</artifactId>
-    <version>1.0</version>
-    <packaging>jar</packaging>
-    <name>db2jpa</name>
-    <description>Reverse Engineering from a Database to JPA Entities Based on the Remarks</description>
-
-    <!-- developers -->
-    <developers>
-        <developer>
-            <name>Christophe Maillard</name>
-            <email>christophe.maillard@rocketmail.com</email>
-        </developer>
-    </developers>
-
-    <!-- properties -->
-    <properties>
-        <!-- project -->
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <!-- jdbc -->
-        <jdbc.groupId>mysql</jdbc.groupId>
-        <jdbc.artifactId>mysql-connector-java</jdbc.artifactId>
-        <jdbc.version>5.1.6</jdbc.version>
-        <jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
-        <jdbc.url>jdbc:mysql://localhost/test</jdbc.url>
-        <jdbc.username>root</jdbc.username>
-        <jdbc.password></jdbc.password>
-        <jdbc.dialect>org.hibernate.dialect.MySQLDialect</jdbc.dialect>
-        <!-- output directory where the entities must be generated -->
-        <!-- (a "/generated" folder will be automatically created within it) -->
-        <output.directory>/dev/test</output.directory>
-        <!-- java package of the entities -->
-        <output.package>com.boogiedev.devbase.domain</output.package>
-        <!-- path to an eclipse formatter (let it empty to use the default one) -->
-        <output.formatter>./eclipse-config/boogie-formatter.xml</output.formatter>
-    </properties>
-
-    <!-- dependencies -->
-    <dependencies>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-tools</artifactId>
-            <version>4.0.0-CR1</version>
-        </dependency>
-    </dependencies>
-
-    <!-- build -->
-    <build>
-
-        <!-- resources -->
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
-
-        <!-- plugins -->
-        <plugins>
-
-            <!-- maven-clean-plugin -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-clean-plugin</artifactId>
-                <version>2.4.1</version>
-                <configuration>
-                    <filesets>
-                        <fileset>
-                            <directory>${output.directory}/generated</directory>
-                        </fileset>
-                    </filesets>
-                </configuration>
-            </plugin>
-
-            <!-- maven-compiler-plugin -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.5</source>
-                    <target>1.5</target>
-                </configuration>
-            </plugin>
-
-            <!-- hibernate3-maven-plugin -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>hibernate3-maven-plugin</artifactId>
-                <version>3.0</version>
-                <configuration>
-                    <hibernatetool destdir="${output.directory}/generated">
-                        <classpath>
-                             <path location="target/classes" />
-                         </classpath>
-                        <jdbcconfiguration
-                            reversestrategy="com.boogiedev.db2jpa.RemarksRevengStrategy"
-                            configurationfile="target/classes/hibernate.cfg.xml"
-                            packagename="${output.package}" />
-                        <hbm2java jdk5="true" ejb3="true" />
-                    </hibernatetool>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>${jdbc.groupId}</groupId>
-                        <artifactId>${jdbc.artifactId}</artifactId>
-                        <version>${jdbc.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.hibernate</groupId>
-                        <artifactId>hibernate</artifactId>
-                        <version>3.2.7.ga</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>javax.transaction</groupId>
-                        <artifactId>jta</artifactId>
-                        <version>1.1</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-
-            <!-- maven-java-formatter-plugin -->
-            <plugin>
-                <groupId>com.googlecode.maven-java-formatter-plugin</groupId>
-                <artifactId>maven-java-formatter-plugin</artifactId>
-                <version>0.2.0</version>
-                <configuration>
-                    <compilerSource>1.5</compilerSource>
-                    <compilerCompliance>1.5</compilerCompliance>
-                    <compilerTargetPlatform>1.5</compilerTargetPlatform>
-                    <configFile>${output.formatter}</configFile>
-                    <directories>
-                        <param>${output.directory}/generated</param>
-                    </directories>
-                </configuration>
-            </plugin>
-
-			<!-- exec-maven-plugin -->
+	
+	<modelVersion>4.0.0</modelVersion>
+	
+	<groupId>com.boogiedev</groupId>
+	<artifactId>db2jpa</artifactId>
+	<version>1.1</version>
+	<packaging>jar</packaging>
+	<name>db2jpa</name>
+	<description>Reverse Engineering from a Database to JPA Entities based on the Remarks</description>
+	
+	<developers>
+		<developer>
+			<id>chma</id>
+			<name>Christophe Maillard</name>
+			<email>christophe.maillard@rocketmail.com</email>
+		</developer>
+	</developers>
+	
+	<properties>
+		<!-- project -->
+		<jdk.version>1.6</jdk.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<!-- jdbc -->
+		<jdbc.groupId>mysql</jdbc.groupId>
+		<jdbc.artifactId>mysql-connector-java</jdbc.artifactId>
+		<jdbc.version>5.1.6</jdbc.version>
+		<jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
+		<jdbc.url>jdbc:mysql://localhost/test</jdbc.url>
+		<jdbc.username>root</jdbc.username>
+		<jdbc.password></jdbc.password>
+		<jdbc.dialect>org.hibernate.dialect.MySQLDialect</jdbc.dialect>
+		<!-- output directory where the entities must be generated -->
+		<!-- (a "/generated" folder will be automatically created within it) -->
+		<output.directory>/var/test</output.directory>
+		<!-- java package of the entities -->
+		<output.package>tld.basepackage.domain</output.package>
+	</properties>
+	
+	<dependencies>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-tools</artifactId>
+			<version>4.0.0-CR1</version>
+		</dependency>
+	</dependencies>
+	
+	<build>
+		
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+		
+		<plugins>
+			
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-clean-plugin</artifactId>
+				<version>2.6.1</version>
+				<configuration>
+					<filesets>
+						<fileset>
+							<directory>${output.directory}/generated</directory>
+						</fileset>
+					</filesets>
+				</configuration>
+			</plugin>
+			
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.2</version>
+				<configuration>
+					<source>${jdk.version}</source>
+					<target>${jdk.version}</target>
+				</configuration>
+			</plugin>
+			
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>hibernate3-maven-plugin</artifactId>
+				<version>3.0</version>
+				<configuration>
+					<hibernatetool destdir="${output.directory}/generated">
+						<classpath>
+							 <path location="target/classes" />
+						 </classpath>
+						<jdbcconfiguration
+							reversestrategy="com.boogiedev.db2jpa.RemarksRevengStrategy"
+							configurationfile="target/classes/hibernate.cfg.xml"
+							packagename="${output.package}" />
+						<hbm2java jdk5="true" ejb3="true" />
+					</hibernatetool>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>${jdbc.groupId}</groupId>
+						<artifactId>${jdbc.artifactId}</artifactId>
+						<version>${jdbc.version}</version>
+					</dependency>
+					<dependency>
+						<groupId>org.hibernate</groupId>
+						<artifactId>hibernate</artifactId>
+						<version>3.2.7.ga</version>
+					</dependency>
+					<dependency>
+						<groupId>javax.transaction</groupId>
+						<artifactId>jta</artifactId>
+						<version>1.1</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+			
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
-				<version>1.2.1</version>
+				<version>1.3.2</version>
 				<configuration>
 					<executable>mvn</executable>
 					<arguments>
 						<argument>clean</argument>
 						<argument>compile</argument>
 						<argument>hibernate3:hbm2java</argument>
-						<argument>java-formatter:format</argument>
 					</arguments>
 				</configuration>
 			</plugin>
-
-        </plugins>
-
-    </build>
-
+			
+		</plugins>
+		
+	</build>
+	
 </project>

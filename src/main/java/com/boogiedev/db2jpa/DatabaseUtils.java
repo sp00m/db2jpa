@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 db2jpa. All rights reserved.
+ * Copyright (c) boogiedev.com, all rights reserved.
  * This code is licensed under the LGPL 3.0 license,
  * available at the root application directory.
  */
@@ -15,87 +15,72 @@ import java.util.Properties;
 import org.hibernate.cfg.Configuration;
 
 /**
- * Database utils.
- * 
- * @since 1.0
- * @version 1.0
+ * Database utilities.
  */
-public class DatabaseUtils {
+public final class DatabaseUtils {
 
-    /** Hibernate URL property value. */
-    private static final String url;
-    /** Hibernate connection properties. */
-    private static final Properties properties = new Properties();
+	/** Hibernate connection properties. */
+	private static final Properties PROPERTIES;
 
-    /**
-     * Accesses the Hibernate properties.
-     */
-    static {
-        final Configuration configuration = new Configuration().configure();
-        url = configuration.getProperty("hibernate.connection.url");
-        properties.setProperty("user", configuration.getProperty("hibernate.connection.username"));
-        properties.setProperty("password", configuration.getProperty("hibernate.connection.password"));
-        properties.setProperty("useInformationSchema", "true");
-    }
+	/** Hibernate URL property value. */
+	private static final String URL;
 
-    /**
-     * Builds a database connection from the Hibernate properties.
-     * 
-     * @return the database connection.
-     * @since 1.0
-     * @version 1.0
-     */
-    public static Connection buildConnection() {
-        try {
-            return DriverManager.getConnection(url, properties);
-        } catch (final SQLException e) {
-            throw new IllegalArgumentException(e);
-        }
-    }
+	/**
+	 * Accesses the Hibernate properties.
+	 */
+	static {
+		Configuration configuration = new Configuration().configure();
+		URL = configuration.getProperty("hibernate.connection.url");
+		PROPERTIES = new Properties();
+		PROPERTIES.setProperty("user", configuration.getProperty("hibernate.connection.username"));
+		PROPERTIES.setProperty("password", configuration.getProperty("hibernate.connection.password"));
+		PROPERTIES.setProperty("useInformationSchema", "true");
+	}
 
-    /**
-     * Closes a database connection.
-     * 
-     * @param connection
-     *        The database connection.
-     * @since 1.0
-     * @version 1.0
-     */
-    public static void close(final Connection connection) {
-        if (connection != null) {
-            try {
-                connection.close();
-            } catch (final SQLException e) {
-                throw new IllegalArgumentException(e);
-            }
-        }
-    }
+	/**
+	 * Builds a database connection from the Hibernate properties.
+	 *
+	 * @return The database connection.
+	 * @throws SQLException
+	 *           If a database access error occurs.
+	 */
+	public static Connection buildConnection() throws SQLException {
+		return DriverManager.getConnection(URL, PROPERTIES);
+	}
 
-    /**
-     * Closes a database result set.
-     * 
-     * @param resultSet
-     *        The database result set.
-     * @since 1.0
-     * @version 1.0
-     */
-    public static void close(final ResultSet resultSet) {
-        if (resultSet != null) {
-            try {
-                resultSet.close();
-            } catch (final SQLException e) {
-                throw new IllegalArgumentException(e);
-            }
-        }
-    }
+	/**
+	 * Closes a connection if not null.
+	 *
+	 * @param connection
+	 *          The connection to close.
+	 * @throws SQLException
+	 *           If a database access error occurs.
+	 */
+	public static void close(Connection connection) throws SQLException {
+		if (connection != null) {
+			connection.close();
+		}
+	}
 
-    /**
-     * Private nullary constructor.
-     * 
-     * @since 1.0
-     * @version 1.0
-     */
-    private DatabaseUtils() {
-    }
+	/**
+	 * Closes a result set if not null.
+	 *
+	 * @param resultSet
+	 *          The result set to close.
+	 * @throws SQLException
+	 *           If a database access error occurs.
+	 */
+	public static void close(ResultSet resultSet) throws SQLException {
+		if (resultSet != null) {
+			resultSet.close();
+		}
+	}
+
+	/**
+	 * Private nullary constructor.
+	 */
+	private DatabaseUtils() {
+		// no-op
+	}
 
 }
