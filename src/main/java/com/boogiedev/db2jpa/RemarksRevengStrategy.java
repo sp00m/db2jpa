@@ -76,10 +76,10 @@ public class RemarksRevengStrategy extends DelegatingReverseEngineeringStrategy 
 	private static final String COMMENT_INDEX = "REMARKS";
 
 	/** Map containing every tables remarks. */
-	private static final Map<String, String> TABLES_COMMENT = new HashMap<String, String>();
+	private static final Map<String, String> TABLES_COMMENT = new HashMap<>();
 
 	/** Map containing every fields remarks. */
-	private static final Map<String, Map<String, String>> FIELDS_COMMENT = new HashMap<String, Map<String, String>>();
+	private static final Map<String, Map<String, String>> FIELDS_COMMENT = new HashMap<>();
 
 	/**
 	 * Stores every fields remarks into the dedicated map.
