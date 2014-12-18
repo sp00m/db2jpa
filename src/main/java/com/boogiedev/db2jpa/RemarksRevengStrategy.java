@@ -7,11 +7,14 @@
 package com.boogiedev.db2jpa;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
+import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.reveng.DelegatingReverseEngineeringStrategy;
 import org.hibernate.cfg.reveng.ReverseEngineeringStrategy;
 import org.hibernate.cfg.reveng.TableIdentifier;
@@ -66,6 +69,24 @@ import org.hibernate.cfg.reveng.TableIdentifier;
  */
 public class RemarksRevengStrategy extends DelegatingReverseEngineeringStrategy {
 
+	/** Hibernate connection properties. */
+	private static final Properties PROPERTIES;
+
+	/** Hibernate URL property value. */
+	private static final String URL;
+
+	/**
+	 * Accesses the Hibernate properties.
+	 */
+	static {
+		Configuration configuration = new Configuration().configure();
+		URL = configuration.getProperty("hibernate.connection.url");
+		PROPERTIES = new Properties();
+		PROPERTIES.setProperty("user", configuration.getProperty("hibernate.connection.username"));
+		PROPERTIES.setProperty("password", configuration.getProperty("hibernate.connection.password"));
+		PROPERTIES.setProperty("useInformationSchema", "true");
+	}
+
 	/** Column index refering to the table name. */
 	private static final String TABLE_NAME_INDEX = "TABLE_NAME";
 
@@ -82,17 +103,50 @@ public class RemarksRevengStrategy extends DelegatingReverseEngineeringStrategy 
 	private static final Map<String, Map<String, String>> FIELDS_COMMENT = new HashMap<>();
 
 	/**
+	 * Creates a new connection.
+	 *
+	 * @return The connection.
+	 * @throws SQLException
+	 *           If a database access error occurs.
+	 */
+	private static Connection getConnection() throws SQLException {
+		return DriverManager.getConnection(URL, PROPERTIES);
+	}
+
+	/**
+	 * Returns the columns metadata.
+	 *
+	 * @param connection
+	 *          The connection.
+	 * @return The columns metadata.
+	 * @throws SQLException
+	 *           If a database access error occurs.
+	 */
+	private static ResultSet getColumnsMetadata(Connection connection) throws SQLException {
+		return connection.getMetaData().getColumns(null, null, "%", null);
+	}
+
+	/**
+	 * Returns the tables metadata.
+	 *
+	 * @param connection
+	 *          The connection.
+	 * @return The tables metadata.
+	 * @throws SQLException
+	 *           If a database access error occurs.
+	 */
+	private static ResultSet getTablesMetadata(Connection connection) throws SQLException {
+		return connection.getMetaData().getTables(null, null, "%", null);
+	}
+
+	/**
 	 * Stores every fields remarks into the dedicated map.
 	 *
 	 * @throws SQLException
 	 *           If a database access error occurs.
 	 */
 	private static void buildFieldsComments() throws SQLException {
-		Connection connection = null;
-		ResultSet resultSet = null;
-		try {
-			connection = DatabaseUtils.buildConnection();
-			resultSet = connection.getMetaData().getColumns(null, null, "%", null);
+		try (Connection connection = getConnection(); ResultSet resultSet = getColumnsMetadata(connection)) {
 			while (resultSet.next()) {
 				String tableName = format(resultSet.getString(TABLE_NAME_INDEX));
 				String comment = format(resultSet.getString(COMMENT_INDEX));
@@ -103,9 +157,6 @@ public class RemarksRevengStrategy extends DelegatingReverseEngineeringStrategy 
 					FIELDS_COMMENT.get(tableName).put(format(resultSet.getString(COLUMN_NAME_INDEX)), comment);
 				}
 			}
-		} finally {
-			DatabaseUtils.close(resultSet);
-			DatabaseUtils.close(connection);
 		}
 	}
 
@@ -116,20 +167,13 @@ public class RemarksRevengStrategy extends DelegatingReverseEngineeringStrategy 
 	 *           If a database access error occurs.
 	 */
 	private static void buildTablesComments() throws SQLException {
-		Connection connection = null;
-		ResultSet resultSet = null;
-		try {
-			connection = DatabaseUtils.buildConnection();
-			resultSet = connection.getMetaData().getTables(null, null, "%", null);
+		try (Connection connection = getConnection(); ResultSet resultSet = getTablesMetadata(connection)) {
 			while (resultSet.next()) {
 				String comment = format(resultSet.getString(COMMENT_INDEX));
 				if (isNotBlank(comment)) {
 					TABLES_COMMENT.put(format(resultSet.getString(TABLE_NAME_INDEX)), comment);
 				}
 			}
-		} finally {
-			DatabaseUtils.close(resultSet);
-			DatabaseUtils.close(connection);
 		}
 	}
 
