@@ -43,7 +43,7 @@ The following entity will be generated:
 		
 	}
 
-## Quick start
+## How-to
 
 1. Configure the POM properties
 2. Run `mvn exec:exec`
