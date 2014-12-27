@@ -9,7 +9,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	
 	<groupId>com.boogiedev</groupId>
-	<artifactId>db2jpa</artifactId>
+	<artifactId>boogiedev-db2jpa</artifactId>
 	<version>1.1</version>
 	<packaging>jar</packaging>
 	<name>db2jpa</name>
